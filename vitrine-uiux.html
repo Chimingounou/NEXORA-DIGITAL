@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design UI/UX — NEXORA DIGITAL®</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--cream:#e8e4df;--dark:#0a0a0a;--darker:#050505;--white:#fff;--accent:#5b52ff;--gray:#666;--text-muted:#444}
+html{scroll-behavior:auto;-webkit-font-smoothing:antialiased;scrollbar-width:none}
+html::-webkit-scrollbar{display:none}
+body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--dark);overflow-x:hidden}
+body::-webkit-scrollbar{display:none}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+
+/* ========== BLACK & WHITE BUTTONS ========== */
+.btn-bw{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  padding:14px 32px;border-radius:999px;
+  background:#000;color:#fff;
+  font-weight:600;font-size:0.95rem;text-decoration:none;
+  border:1px solid #000;
+  transition:all 0.3s cubic-bezier(0.4,0,0.2,1);cursor:pointer;
+}
+.btn-bw:hover{
+  background:#fff;color:#000;border-color:#fff;
+  transform:translateY(-2px);
+  box-shadow:0 10px 30px rgba(0,0,0,0.15);
+}
+.btn-bw svg{
+  width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:stroke 0.3s;
+}
+.btn-bw-outline{
+  background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.3);
+}
+.btn-bw-outline:hover{
+  background:#fff;color:#000;border-color:#fff;
+}
+
+/* ========== LIQUID GLASS ICONS ========== */
+.glass-icon{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:64px;height:64px;border-radius:20px;
+  background:linear-gradient(135deg,rgba(255,255,255,0.15) 0%,rgba(255,255,255,0.05) 100%);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.2);
+  box-shadow:0 8px 32px rgba(0,0,0,0.1),inset 0 1px 0 rgba(255,255,255,0.3),inset 0 -1px 0 rgba(255,255,255,0.1);
+  transition:all 0.3s ease;margin-bottom:24px;
+}
+.glass-icon svg{width:28px;height:28px;stroke:rgba(255,255,255,0.9);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2))}
+.glass-icon-light{
+  background:linear-gradient(135deg,rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.2) 100%);
+  border:1px solid rgba(255,255,255,0.6);
+  box-shadow:0 8px 32px rgba(0,0,0,0.05),inset 0 1px 0 rgba(255,255,255,0.8),inset 0 -1px 0 rgba(255,255,255,0.3);
+}
+.glass-icon-light svg{stroke:var(--accent);filter:drop-shadow(0 2px 4px rgba(91,82,255,0.2))}
+
+/* ========== NAV ========== */
+.nav{position:fixed;top:0;left:0;width:100%;z-index:9000;padding:32px 48px;transition:all .4s}
+.nav.scrolled{background:rgba(10,10,10,.95);backdrop-filter:blur(20px);padding:16px 48px}
+.nav-inner{display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-size:1.1rem;font-weight:900;letter-spacing:-.5px;display:flex;align-items:center;gap:8px;color:#fff}
+.nav-logo-mark{width:28px;height:28px;background:var(--cream);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--dark);font-size:.75rem;font-weight:900}
+.nav-back{display:inline-flex;align-items:center;gap:8px;padding:10px 24px;font-size:0.85rem;font-weight:600;letter-spacing:.5px;border-radius:100px;transition:all .3s}
+
+/* ========== HERO SPIRAL (PARTICLES ONLY) ========== */
+.hero-spiral{position:relative;width:100vw;height:300vh;background:#000}
+.hero-spiral canvas{position:fixed;top:0;left:0;width:100%;height:100vh;z-index:1}
+
+/* ========== SECTIONS ========== */
+.section-intro{background:var(--cream);padding:160px 0;position:relative;z-index:2}
+.intro-inner{padding:0 80px;max-width:1200px;margin:0 auto}
+.intro-label{font-size:.7rem;letter-spacing:4px;text-transform:uppercase;color:var(--gray);font-weight:600;display:flex;align-items:center;gap:12px;margin-bottom:40px}
+.intro-label::before{content:'';width:40px;height:1px;background:var(--gray)}
+.intro-title{font-size:clamp(2.5rem,5vw,4rem);font-weight:900;letter-spacing:-2px;line-height:1.1;margin-bottom:32px;max-width:800px}
+.intro-desc{font-size:1.1rem;font-weight:300;color:var(--text-muted);line-height:1.8;max-width:700px;margin-bottom:60px}
+.intro-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:80px}
+.stat-item{text-align:center}
+.stat-value{font-size:clamp(2.5rem,5vw,4rem);font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:12px;background:linear-gradient(135deg, var(--accent), #8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:.8rem;letter-spacing:2px;text-transform:uppercase;color:var(--gray);font-weight:600}
+
+.section-gallery{background:var(--dark);padding:160px 0;position:relative;z-index:2}
+.gallery-header{padding:0 80px;margin-bottom:80px}
+.gallery-label{font-size:.7rem;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.35);font-weight:500;display:flex;align-items:center;gap:12px;margin-bottom:40px}
+.gallery-label::before{content:'';width:40px;height:1px;background:rgba(255,255,255,.25)}
+.gallery-title{font-size:clamp(2.5rem,5vw,4rem);font-weight:900;letter-spacing:-2px;line-height:1.1;color:var(--cream);max-width:700px}
+.gallery-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;padding:0 80px}
+.gallery-col-left{grid-column:span 4;display:grid;gap:16px}
+.gallery-col-center{grid-column:span 4;position:sticky;top:0;height:100vh;display:grid;grid-template-rows:repeat(3,1fr);gap:16px}
+.gallery-col-right{grid-column:span 4;display:grid;gap:16px}
+.gallery-item{overflow:hidden;border-radius:12px;transition:transform .6s cubic-bezier(.25,.46,.45,.94)}
+.gallery-item img{width:100%;height:384px;object-fit:cover;transition:transform .8s cubic-bezier(.76,0,.24,1)}
+.gallery-item:hover img{transform:scale(1.05)}
+.gallery-col-center .gallery-item img{height:100%}
+
+.section-process{background:var(--cream);padding:160px 0;position:relative;z-index:2}
+.process-inner{padding:0 80px;max-width:1200px;margin:0 auto}
+.process-label{font-size:.7rem;letter-spacing:4px;text-transform:uppercase;color:var(--gray);font-weight:600;display:flex;align-items:center;gap:12px;margin-bottom:40px}
+.process-label::before{content:'';width:40px;height:1px;background:var(--gray)}
+.process-title{font-size:clamp(2.5rem,5vw,4rem);font-weight:900;letter-spacing:-2px;line-height:1.1;margin-bottom:80px;max-width:700px}
+.process-steps{display:flex;flex-direction:column;gap:40px}
+.process-step{display:grid;grid-template-columns:80px 1fr;gap:40px;align-items:start;padding:40px;background:#fff;border-radius:20px;border:1px solid rgba(0,0,0,.08);transition:all .4s}
+.process-step:hover{transform:translateX(10px);box-shadow:0 20px 60px rgba(0,0,0,.1)}
+.process-step-num{font-size:3rem;font-weight:900;color:var(--accent);line-height:1}
+.process-step-content h3{font-size:1.5rem;font-weight:800;margin-bottom:12px;letter-spacing:-.5px}
+.process-step-content p{font-size:.95rem;font-weight:300;color:var(--text-muted);line-height:1.7}
+
+.section-tools{background:var(--dark);padding:160px 0;position:relative;z-index:2}
+.tools-inner{padding:0 80px;max-width:1200px;margin:0 auto;text-align:center}
+.tools-label{font-size:.7rem;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.35);font-weight:500;margin-bottom:40px}
+.tools-title{font-size:clamp(2.5rem,5vw,4rem);font-weight:900;letter-spacing:-2px;line-height:1.1;margin-bottom:80px;color:var(--cream)}
+.tools-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.tool-item{padding:32px;background:rgba(255,255,255,.03);border-radius:16px;border:1px solid rgba(255,255,255,.06);transition:all .3s}
+.tool-item:hover{background:rgba(255,255,255,.08);transform:translateY(-8px)}
+.tool-item-name{font-size:.9rem;font-weight:700;color:var(--cream)}
+
+.section-values{background:var(--cream);padding:160px 0;position:relative;z-index:2}
+.values-inner{padding:0 80px;max-width:1200px;margin:0 auto}
+.values-label{font-size:.7rem;letter-spacing:4px;text-transform:uppercase;color:var(--gray);font-weight:600;display:flex;align-items:center;gap:12px;margin-bottom:40px}
+.values-label::before{content:'';width:40px;height:1px;background:var(--gray)}
+.values-title{font-size:clamp(2.5rem,5vw,4rem);font-weight:900;letter-spacing:-2px;line-height:1.1;margin-bottom:80px;max-width:700px}
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.value-card{padding:40px;background:#fff;border-radius:20px;border:1px solid rgba(0,0,0,.08);transition:all .4s}
+.value-card:hover{transform:translateY(-8px);box-shadow:0 20px 60px rgba(0,0,0,.1)}
+.value-card-title{font-size:1.3rem;font-weight:800;letter-spacing:-.5px;margin-bottom:16px}
+.value-card-text{font-size:.9rem;font-weight:300;color:var(--text-muted);line-height:1.7}
+
+.section-cta{background:var(--dark);padding:200px 0;position:relative;z-index:2;overflow:hidden}
+.cta-bg-circle{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}
+.cta-bg-c1{width:600px;height:600px;background:rgba(91,82,255,.18);top:-200px;right:-100px}
+.cta-bg-c2{width:400px;height:400px;background:rgba(255,77,77,.1);bottom:-100px;left:-50px}
+.cta-inner{padding:0 80px;text-align:center;position:relative;z-index:1}
+.cta-tag{font-size:.7rem;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.35);font-weight:500;margin-bottom:32px;display:block}
+.cta-title{font-size:clamp(3rem,7vw,7rem);font-weight:900;letter-spacing:-4px;line-height:.95;color:var(--cream);margin-bottom:48px}
+.cta-title .italic{font-style:italic;color:rgba(255,255,255,.35)}
+.cta-desc{font-size:1.1rem;font-weight:300;color:rgba(255,255,255,.45);line-height:1.7;max-width:500px;margin:0 auto 60px}
+.cta-btns{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+
+.footer{background:var(--darker);padding:80px 80px 40px;border-top:1px solid rgba(255,255,255,.06);position:relative;z-index:2}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:60px;margin-bottom:80px}
+.footer-brand-logo{font-size:1.5rem;font-weight:900;letter-spacing:-1px;color:var(--cream);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.footer-brand-logo-mark{width:32px;height:32px;background:var(--cream);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--dark);font-size:.8rem;font-weight:900}
+.footer-brand-desc{font-size:.88rem;color:rgba(255,255,255,.3);line-height:1.7;font-weight:300;max-width:300px}
+.footer-col-title{font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.25);font-weight:600;margin-bottom:20px}
+.footer-links{display:flex;flex-direction:column;gap:10px}
+.footer-link{font-size:.88rem;color:rgba(255,255,255,.35);transition:color .3s;font-weight:300}
+.footer-link:hover{color:var(--cream)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:32px;border-top:1px solid rgba(255,255,255,.06);flex-wrap:wrap;gap:16px}
+.footer-copy{font-size:.75rem;color:rgba(255,255,255,.18);font-weight:300}
+.footer-socials{display:flex;gap:20px}
+.footer-social{font-size:.75rem;color:rgba(255,255,255,.25);letter-spacing:1px;text-transform:uppercase;transition:color .3s;font-weight:500}
+.footer-social:hover{color:var(--cream)}
+
+.sr{opacity:0;transform:translateY(60px);transition:opacity .9s cubic-bezier(.25,.46,.45,.94),transform .9s cubic-bezier(.25,.46,.45,.94)}
+.sr.visible{opacity:1;transform:translateY(0)}
+
+@media(max-width:1024px){
+.tools-grid{grid-template-columns:repeat(2,1fr)}
+.values-grid{grid-template-columns:1fr 1fr}
+.footer-top{grid-template-columns:1fr 1fr}
+.gallery-grid{grid-template-columns:1fr;gap:16px}
+.gallery-col-left,.gallery-col-center,.gallery-col-right{grid-column:span 1}
+.gallery-col-center{position:relative;height:auto;grid-template-rows:none}
+}
+@media(max-width:768px){
+.nav{padding:20px 24px}
+.nav.scrolled{padding:12px 24px}
+.intro-inner,.gallery-header,.process-inner,.tools-inner,.values-inner,.cta-inner,.footer{padding-left:24px!important;padding-right:24px!important}
+.gallery-grid{padding:0 24px}
+.intro-stats{grid-template-columns:1fr}
+.tools-grid{grid-template-columns:1fr}
+.values-grid{grid-template-columns:1fr}
+.footer-top{grid-template-columns:1fr}
+.cta-title{letter-spacing:-2px}
+.cta-btns{flex-direction:column;align-items:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+<div class="nav-inner">
+<a href="index.html" class="nav-logo"><div class="nav-logo-mark">N</div><div class="nav-logo-text"><span>NEXORA</span></div></a>
+<a href="index.html" class="nav-back btn-bw btn-bw-outline">
+  <svg viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  Retour
+</a>
+</div>
+</nav>
+
+<!-- HERO SPIRAL (PARTICLES ONLY, NO TEXT) -->
+<section class="hero-spiral" id="heroSpiral">
+<canvas id="spiralCanvas"></canvas>
+</section>
+
+<!-- INTRO -->
+<section class="section-intro">
+<div class="intro-inner">
+<div class="intro-label sr">Notre Approche</div>
+<h2 class="intro-title sr">L'UI/UX au cœur de chaque projet</h2>
+<p class="intro-desc sr">Chez Nexora, nous croyons que chaque interaction compte. Notre approche du design UI/UX combine recherche utilisateur approfondie, prototypage rapide et tests rigoureux pour créer des interfaces qui ne sont pas seulement belles, mais véritablement efficaces.</p>
+<div class="intro-stats">
+<div class="stat-item sr"><div class="stat-value">98%</div><div class="stat-label">Satisfaction Client</div></div>
+<div class="stat-item sr"><div class="stat-value">340%</div><div class="stat-label">Amélioration Conversion</div></div>
+<div class="stat-item sr"><div class="stat-value">2M+</div><div class="stat-label">Utilisateurs Impactés</div></div>
+</div>
+</div>
+</section>
+
+<!-- GALLERY STICKY -->
+<section class="section-gallery">
+<div class="gallery-header">
+<div class="gallery-label sr">Portfolio Visuel</div>
+<h2 class="gallery-title sr">Des designs qui parlent d'eux-mêmes</h2>
+</div>
+<div class="gallery-grid">
+<div class="gallery-col-left">
+<figure class="gallery-item sr"><img src="https://images.unsplash.com/photo-1718838541476-d04e71caa347?w=500&auto=format&fit=crop" alt="UI Design 1"></figure>
+<figure class="gallery-item sr"><img src="https://images.unsplash.com/photo-1715432362539-6ab2ab480db2?w=500&auto=format&fit=crop" alt="UI Design 2"></figure>
+<figure class="gallery-item sr"><img src="https://images.unsplash.com/photo-1718601980986-0ce75101d52d?w=500&auto=format&fit=crop" alt="UI Design 3"></figure>
+<figure class="gallery-item sr"><img src="https://images.unsplash.com/photo-1685904042960-66242a0ac352?w=500&auto=format&fit=crop" alt="UI Design 4"></figure>
+<figure class="gallery-item sr"><img src="https://images.unsplash.com/photo-1719411182379-ffd97c1f7ebf?w=500&auto=format&fit=crop" alt="UI Design 5"></figure>
+</div>
+<div class="gallery-col-center">
+<figure class="gallery-item"><img src="https://images.unsplash.com/photo-1718969604981-de826f44ce15?w=500&auto=format&fit=crop" alt="UI Design Central 1"></figure>
+<figure class="gallery-item"><img src="https://images.unsplash.com/photo-1476180814856-a36609db0493?w=500&auto=format&fit=crop" alt="UI Design Central 2"></figure>
+<figure class="gallery-item"><img src="https://images.unsplash.com/photo-1595407660626-db35dcd16609?w=500&auto=format&fit=crop" alt="UI Design Central 3"></figure>
+</div>
+<div class="gallery-col-right">
+<figure class="gallery-item sr"><img src="https://images.unsplash.com/photo-1719547907790-f661a88302c2?w=500&auto=format&fit=crop" alt="UI Design 6"></figure>
+<figure class="gallery-item sr"><img src="https://images.unsplash.com/photo-1599054799131-4b09c73a63cf?w=500&auto=format&fit=crop" alt="UI Design 7"></figure>
+<figure class="gallery-item sr"><img src="https://images.unsplash.com/photo-1719963532023-01b573d1d584?w=500&auto=format&fit=crop" alt="UI Design 8"></figure>
+<figure class="gallery-item sr"><img src="https://images.unsplash.com/photo-1714328101501-3594de6cb80f?w=500&auto=format&fit=crop" alt="UI Design 9"></figure>
+<figure class="gallery-item sr"><img src="https://images.unsplash.com/photo-1719554873571-0fd6bf322bb1?w=500&auto=format&fit=crop" alt="UI Design 10"></figure>
+</div>
+</div>
+</section>
+
+<!-- PROCESS -->
+<section class="section-process">
+<div class="process-inner">
+<div class="process-label sr">Notre Processus</div>
+<h2 class="process-title sr">Une méthodologie éprouvée en 4 étapes</h2>
+<div class="process-steps">
+<div class="process-step sr">
+<div class="process-step-num">01</div>
+<div class="process-step-content">
+<h3>Recherche & Découverte</h3>
+<p>Interviews utilisateurs, analyse concurrentielle, définition des personas et des parcours utilisateurs. Nous comprenons vos utilisateurs avant de concevoir.</p>
+</div>
+</div>
+<div class="process-step sr">
+<div class="process-step-num">02</div>
+<div class="process-step-content">
+<h3>Architecture & Wireframes</h3>
+<p>Structuration de l'information, hiérarchie visuelle, wireframes basse fidélité. Nous validons l'approche avant de passer au design détaillé.</p>
+</div>
+</div>
+<div class="process-step sr">
+<div class="process-step-num">03</div>
+<div class="process-step-content">
+<h3>Design & Prototypage</h3>
+<p>Maquettes haute fidélité, design system complet, prototypes interactifs. Nous créons une expérience visuelle cohérente et testable.</p>
+</div>
+</div>
+<div class="process-step sr">
+<div class="process-step-num">04</div>
+<div class="process-step-content">
+<h3>Tests & Itérations</h3>
+<p>Tests d'utilisabilité, collecte de feedback, itérations basées sur les données. Nous perfectionnons l'expérience avant le développement.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- TOOLS -->
+<section class="section-tools">
+<div class="tools-inner">
+<div class="tools-label sr">Nos Outils</div>
+<h2 class="tools-title sr">Les technologies que nous maîtrisons</h2>
+<div class="tools-grid">
+<div class="tool-item sr"><div class="glass-icon glass-icon-light" style="margin:0 auto 16px"><svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg></div><div class="tool-item-name">Figma</div></div>
+<div class="tool-item sr"><div class="glass-icon glass-icon-light" style="margin:0 auto 16px"><svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg></div><div class="tool-item-name">Sketch</div></div>
+<div class="tool-item sr"><div class="glass-icon glass-icon-light" style="margin:0 auto 16px"><svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg></div><div class="tool-item-name">Adobe XD</div></div>
+<div class="tool-item sr"><div class="glass-icon glass-icon-light" style="margin:0 auto 16px"><svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg></div><div class="tool-item-name">Framer</div></div>
+<div class="tool-item sr"><div class="glass-icon glass-icon-light" style="margin:0 auto 16px"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><div class="tool-item-name">Webflow</div></div>
+<div class="tool-item sr"><div class="glass-icon glass-icon-light" style="margin:0 auto 16px"><svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg></div><div class="tool-item-name">InVision</div></div>
+<div class="tool-item sr"><div class="glass-icon glass-icon-light" style="margin:0 auto 16px"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><div class="tool-item-name">Principle</div></div>
+<div class="tool-item sr"><div class="glass-icon glass-icon-light" style="margin:0 auto 16px"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div class="tool-item-name">Hotjar</div></div>
+</div>
+</div>
+</section>
+
+<!-- VALUES -->
+<section class="section-values">
+<div class="values-inner">
+<div class="values-label sr">Nos Valeurs</div>
+<h2 class="values-title sr">Ce qui guide notre travail au quotidien</h2>
+<div class="values-grid">
+<div class="value-card sr"><div class="glass-icon glass-icon-light"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><h3 class="value-card-title">Intention</h3><p class="value-card-text">Chaque élément de l'interface est choisi avec intention. Rien n'est laissé au hasard, chaque pixel a un purpose.</p></div>
+<div class="value-card sr"><div class="glass-icon glass-icon-light"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><h3 class="value-card-title">Cohérence</h3><p class="value-card-text">Une expérience utilisateur forte se reconnaît à sa cohérence. Nous créons des systèmes de design unifiés et scalables.</p></div>
+<div class="value-card sr"><div class="glass-icon glass-icon-light"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><h3 class="value-card-title">Modernité</h3><p class="value-card-text">Des interfaces qui traversent le temps tout en restant contemporaines. Nous anticipons les tendances sans les suivre aveuglément.</p></div>
+<div class="value-card sr"><div class="glass-icon glass-icon-light"><svg viewBox="0 0 24 24"><path d="M6 3h12l4 6-10 13L2 9z"/><path d="M11 3l1 10"/><path d="M2 9h20"/></svg></div><h3 class="value-card-title">Excellence</h3><p class="value-card-text">Nous visons l'excellence dans chaque détail, de la typographie aux micro-interactions. La qualité est non négociable.</p></div>
+<div class="value-card sr"><div class="glass-icon glass-icon-light"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><h3 class="value-card-title">Accessibilité</h3><p class="value-card-text">Le design doit être inclusif. Nous créons des interfaces accessibles à tous, respectant les standards WCAG.</p></div>
+<div class="value-card sr"><div class="glass-icon glass-icon-light"><svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg></div><h3 class="value-card-title">Créativité</h3><p class="value-card-text">Nous repoussons les limites créatives pour créer des expériences mémorables qui se démarquent de la concurrence.</p></div>
+</div>
+</div>
+</section>
+
+<!-- CTA -->
+<section class="section-cta">
+<div class="cta-bg-circle cta-bg-c1"></div>
+<div class="cta-bg-circle cta-bg-c2"></div>
+<div class="cta-inner">
+<span class="cta-tag sr">Prêt à transformer votre produit ?</span>
+<h2 class="cta-title sr"><span>Créons ensemble</span><br><span>une expérience</span> <span class="italic">exceptionnelle</span></h2>
+<p class="cta-desc sr">Discutons de votre projet et voyons comment nous pouvons créer une interface utilisateur qui captive et convertit.</p>
+<div class="cta-btns sr">
+<a href="mailto:ngounouchimi@gmail.com" class="btn-bw"><span>Démarrer un projet</span><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+<a href="https://wa.me/237659446646?text=Hello%20Nexora!" class="btn-bw btn-bw-outline">
+  <span>WhatsApp</span>
+</a>
+</div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+<div class="footer-top">
+<div><div class="footer-brand-logo"><div class="footer-brand-logo-mark">N</div>NEXORA DIGITAL®</div><p class="footer-brand-desc">Agence digitale nouvelle génération spécialisée dans le design web, UI/UX, branding et marketing digital.</p></div>
+<div><div class="footer-col-title">Services</div><div class="footer-links"><a href="vitrine-uiux.html" class="footer-link">UI/UX Design</a><a href="vitrine-branding.html" class="footer-link">Brand Identity</a><a href="vitrine-marketing.html" class="footer-link">Digital Marketing</a><a href="vitrines-web.html" class="footer-link">Website Design</a></div></div>
+<div><div class="footer-col-title">Entreprise</div><div class="footer-links"><a href="index.html#about" class="footer-link">À propos</a><a href="index.html#portfolio" class="footer-link">Portfolio</a><a href="index.html#testimonials" class="footer-link">Témoignages</a><a href="index.html#contact" class="footer-link">Contact</a></div></div>
+<div><div class="footer-col-title">Contact</div><div class="footer-links"><a href="mailto:ngounouchimi@gmail.com" class="footer-link">ngounouchimi@gmail.com</a><a href="tel:+237659446646" class="footer-link">+237 659 446 646</a><a href="https://wa.me/237659446646" class="footer-link" target="_blank">WhatsApp</a></div></div>
+</div>
+<div class="footer-bottom"><p class="footer-copy">© 2026 Nexora Digital®. All rights reserved.</p><div class="footer-socials"><a href="#" class="footer-social">Instagram</a><a href="#" class="footer-social">LinkedIn</a><a href="#" class="footer-social">Twitter</a><a href="#" class="footer-social">Dribbble</a></div></div>
+</footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// ========== VECTOR CLASSES ==========
+class Vector2D { constructor(x, y) { this.x = x; this.y = y; } static random(min, max) { return min + Math.random() * (max - min); } }
+class Vector3D { constructor(x, y, z) { this.x = x; this.y = y; this.z = z; } }
+
+// ========== STAR CLASS ==========
+class Star {
+    constructor(cameraZ, cameraTravelDistance) {
+        this.angle = Math.random() * Math.PI * 2;
+        this.distance = 30 * Math.random() + 15;
+        this.rotationDirection = Math.random() > 0.5 ? 1 : -1;
+        this.expansionRate = 1.2 + Math.random() * 0.8;
+        this.finalScale = 0.7 + Math.random() * 0.6;
+        this.dx = this.distance * Math.cos(this.angle);
+        this.dy = this.distance * Math.sin(this.angle);
+        this.spiralLocation = (1 - Math.pow(1 - Math.random(), 3.0)) / 1.3;
+        this.z = Vector2D.random(0.5 * cameraZ, cameraTravelDistance + cameraZ);
+        const lerp = (start, end, t) => start * (1 - t) + end * t;
+        this.z = lerp(this.z, cameraTravelDistance / 2, 0.3 * this.spiralLocation);
+        this.strokeWeightFactor = Math.pow(Math.random(), 2.0);
+    }
+    render(p, controller) {
+        const spiralPos = controller.spiralPath(this.spiralLocation);
+        const q = p - this.spiralLocation;
+        if (q > 0) {
+            const displacementProgress = controller.constrain(4 * q, 0, 1);
+            const linearEasing = displacementProgress;
+            const elasticEasing = controller.easeOutElastic(displacementProgress);
+            const powerEasing = Math.pow(displacementProgress, 2);
+            let easing;
+            if (displacementProgress < 0.3) easing = controller.lerp(linearEasing, powerEasing, displacementProgress / 0.3);
+            else if (displacementProgress < 0.7) { const t = (displacementProgress - 0.3) / 0.4; easing = controller.lerp(powerEasing, elasticEasing, t); }
+            else easing = elasticEasing;
+            
+            let screenX, screenY;
+            if (displacementProgress < 0.3) {
+                screenX = controller.lerp(spiralPos.x, spiralPos.x + this.dx * 0.3, easing / 0.3);
+                screenY = controller.lerp(spiralPos.y, spiralPos.y + this.dy * 0.3, easing / 0.3);
+            } else if (displacementProgress < 0.7) {
+                const midProgress = (displacementProgress - 0.3) / 0.4;
+                const curveStrength = Math.sin(midProgress * Math.PI) * this.rotationDirection * 1.5;
+                const baseX = spiralPos.x + this.dx * 0.3, baseY = spiralPos.y + this.dy * 0.3;
+                const targetX = spiralPos.x + this.dx * 0.7, targetY = spiralPos.y + this.dy * 0.7;
+                const perpX = -this.dy * 0.4 * curveStrength, perpY = this.dx * 0.4 * curveStrength;
+                screenX = controller.lerp(baseX, targetX, midProgress) + perpX * midProgress;
+                screenY = controller.lerp(baseY, targetY, midProgress) + perpY * midProgress;
+            } else {
+                const finalProgress = (displacementProgress - 0.7) / 0.3;
+                const baseX = spiralPos.x + this.dx * 0.7, baseY = spiralPos.y + this.dy * 0.7;
+                const targetDistance = this.distance * this.expansionRate * 1.5;
+                const spiralTurns = 1.2 * this.rotationDirection;
+                const spiralAngle = this.angle + spiralTurns * finalProgress * Math.PI;
+                const targetX = spiralPos.x + targetDistance * Math.cos(spiralAngle);
+                const targetY = spiralPos.y + targetDistance * Math.sin(spiralAngle);
+                screenX = controller.lerp(baseX, targetX, finalProgress);
+                screenY = controller.lerp(baseY, targetY, finalProgress);
+            }
+            const vx = (this.z - controller.cameraZ) * screenX / controller.viewZoom;
+            const vy = (this.z - controller.cameraZ) * screenY / controller.viewZoom;
+            const position = new Vector3D(vx, vy, this.z);
+            let sizeMultiplier = 1.0;
+            if (displacementProgress < 0.6) sizeMultiplier = 1.0 + displacementProgress * 0.2;
+            else { const t = (displacementProgress - 0.6) / 0.4; sizeMultiplier = 1.2 * (1.0 - t) + this.finalScale * t; }
+            const dotSize = 8.5 * this.strokeWeightFactor * sizeMultiplier;
+            controller.showProjectedDot(position, dotSize);
+        }
+    }
+}
+
+// ========== ANIMATION CONTROLLER ==========
+class AnimationController {
+    constructor(canvas, ctx, dpr, size) {
+        this.canvas = canvas; this.ctx = ctx; this.dpr = dpr; this.size = size; this.time = 0; this.stars = [];
+        this.changeEventTime = 0.32; this.cameraZ = -400; this.cameraTravelDistance = 3400;
+        this.startDotYOffset = 28; this.viewZoom = 100; this.numberOfStars = 5000; this.trailLength = 80;
+        this.setupRandomGenerator(); this.createStars();
+    }
+    setupRandomGenerator() {
+        const originalRandom = Math.random;
+        const customRandom = () => { let seed = 1234; return () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }; };
+        Math.random = customRandom(); this.createStars(); Math.random = originalRandom;
+    }
+    createStars() { for (let i = 0; i < this.numberOfStars; i++) this.stars.push(new Star(this.cameraZ, this.cameraTravelDistance)); }
+    ease(p, g) { return p < 0.5 ? 0.5 * Math.pow(2 * p, g) : 1 - 0.5 * Math.pow(2 * (1 - p), g); }
+    easeOutElastic(x) { const c4 = (2 * Math.PI) / 4.5; if (x <= 0) return 0; if (x >= 1) return 1; return Math.pow(2, -8 * x) * Math.sin((x * 8 - 0.75) * c4) + 1; }
+    map(value, start1, stop1, start2, stop2) { return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1)); }
+    constrain(value, min, max) { return Math.min(Math.max(value, min), max); }
+    lerp(start, end, t) { return start * (1 - t) + end * t; }
+    spiralPath(p) {
+        p = this.constrain(1.2 * p, 0, 1); p = this.ease(p, 1.8);
+        const numberOfSpiralTurns = 6; const theta = 2 * Math.PI * numberOfSpiralTurns * Math.sqrt(p); const r = 170 * Math.sqrt(p);
+        return new Vector2D(r * Math.cos(theta), r * Math.sin(theta) + this.startDotYOffset);
+    }
+    rotate(v1, v2, p, orientation) {
+        const middle = new Vector2D((v1.x + v2.x) / 2, (v1.y + v2.y) / 2);
+        const dx = v1.x - middle.x, dy = v1.y - middle.y, angle = Math.atan2(dy, dx), o = orientation ? -1 : 1, r = Math.sqrt(dx * dx + dy * dy);
+        const bounce = Math.sin(p * Math.PI) * 0.05 * (1 - p);
+        return new Vector2D(middle.x + r * (1 + bounce) * Math.cos(angle + o * Math.PI * this.easeOutElastic(p)), middle.y + r * (1 + bounce) * Math.sin(angle + o * Math.PI * this.easeOutElastic(p)));
+    }
+    showProjectedDot(position, sizeFactor) {
+        const t2 = this.constrain(this.map(this.time, this.changeEventTime, 1, 0, 1), 0, 1);
+        const newCameraZ = this.cameraZ + this.ease(Math.pow(t2, 1.2), 1.8) * this.cameraTravelDistance;
+        if (position.z > newCameraZ) {
+            const dotDepthFromCamera = position.z - newCameraZ;
+            const x = this.viewZoom * position.x / dotDepthFromCamera, y = this.viewZoom * position.y / dotDepthFromCamera, sw = 400 * sizeFactor / dotDepthFromCamera;
+            this.ctx.lineWidth = sw; this.ctx.beginPath(); this.ctx.arc(x, y, 0.5, 0, Math.PI * 2); this.ctx.fill();
+        }
+    }
+    drawStartDot() {
+        if (this.time > this.changeEventTime) {
+            const dy = this.cameraZ * this.startDotYOffset / this.viewZoom;
+            this.showProjectedDot(new Vector3D(0, dy, this.cameraTravelDistance), 2.5);
+        }
+    }
+    render() {
+        const ctx = this.ctx; if (!ctx) return;
+        ctx.fillStyle = 'black'; ctx.fillRect(0, 0, this.size, this.size);
+        ctx.save(); ctx.translate(this.size / 2, this.size / 2);
+        const t1 = this.constrain(this.map(this.time, 0, this.changeEventTime + 0.25, 0, 1), 0, 1);
+        const t2 = this.constrain(this.map(this.time, this.changeEventTime, 1, 0, 1), 0, 1);
+        ctx.rotate(-Math.PI * this.ease(t2, 2.7));
+        this.drawTrail(t1);
+        ctx.fillStyle = 'white'; for (const star of this.stars) star.render(t1, this);
+        this.drawStartDot(); ctx.restore();
+    }
+    drawTrail(t1) {
+        for (let i = 0; i < this.trailLength; i++) {
+            const f = this.map(i, 0, this.trailLength, 1.1, 0.1);
+            const sw = (1.3 * (1 - t1) + 3.0 * Math.sin(Math.PI * t1)) * f;
+            this.ctx.fillStyle = 'white'; this.ctx.lineWidth = sw;
+            const pathTime = t1 - 0.00015 * i; const position = this.spiralPath(pathTime);
+            const basePos = position, offset = new Vector2D(position.x + 5, position.y + 5);
+            const rotated = this.rotate(basePos, offset, Math.sin(this.time * Math.PI * 2) * 0.5 + 0.5, i % 2 === 0);
+            this.ctx.beginPath(); this.ctx.arc(rotated.x, rotated.y, sw / 2, 0, Math.PI * 2); this.ctx.fill();
+        }
+    }
+    setTime(t) { this.time = t; this.render(); }
+}
+
+// ========== INIT ==========
+function initSpiralAnimation() {
+    const canvas = document.getElementById('spiralCanvas'); if (!canvas) return;
+    const ctx = canvas.getContext('2d'); if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1; const size = Math.max(window.innerWidth, window.innerHeight);
+    canvas.width = size * dpr; canvas.height = size * dpr;
+    canvas.style.width = `${window.innerWidth}px`; canvas.style.height = `${window.innerHeight}px`;
+    ctx.scale(dpr, dpr);
+    const controller = new AnimationController(canvas, ctx, dpr, size);
+    ScrollTrigger.create({ trigger: '#heroSpiral', start: 'top top', end: 'bottom bottom', scrub: 1, onUpdate: (self) => { controller.setTime(self.progress); } });
+}
+
+window.addEventListener('scroll', () => {
+    const nav = document.getElementById('nav');
+    if (window.scrollY > 100) nav.classList.add('scrolled'); else nav.classList.remove('scrolled');
+}, { passive: true });
+
+function checkReveal() { document.querySelectorAll('.sr').forEach(el => { if (el.getBoundingClientRect().top < window.innerHeight - 80) el.classList.add('visible'); }); }
+
+window.addEventListener('load', () => { initSpiralAnimation(); checkReveal(); });
+window.addEventListener('scroll', checkReveal, { passive: true });
+</script>
+</body>
+</html>
