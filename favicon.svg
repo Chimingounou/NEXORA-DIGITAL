@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <style>
+    /* Couleurs par défaut (Mode Clair) */
+    .bg { fill: #0a0a0a; }
+    .fg { fill: #5b52ff; }
+    
+    /* Couleurs inversées automatiquement en Mode Sombre */
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #e8e4df; }
+      .fg { fill: #5b52ff; }
+    }
+  </style>
+  <!-- Fond arrondi -->
+  <rect class="bg" width="100" height="100" rx="22"/>
+  <!-- Lettre N géométrique et moderne -->
+  <path class="fg" d="M28 75 V25 H40 L60 55 V25 H72 V75 H60 L40 45 V75 Z"/>
+</svg>
